@@ -1,0 +1,84 @@
+
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>MINT LAND</title>
+		<meta charset="utf-8" />
+		<script src="./bignumber.min.js"></script>
+		<script>
+		const numberToHex = function(n) {
+			var nb = new BigNumber(n);
+			var nbx = nb.toString(16);
+			
+			
+			return nbx;
+		}
+				
+		const mint = async function() {
+			if (typeof window.ethereum === 'undefined') {
+				return;
+			} else {
+				console.log(window.ethereum);
+			}
+
+
+			// Will Start the metamask extension
+			await ethereum.request({ method: 'eth_requestAccounts' });
+
+		 const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+		 console.log(accounts);
+
+		 console.log("chainId: ", window.ethereum.chainId);
+		 console.log("isMetaMask: ", window.ethereum.isMetaMask);
+
+		{
+			var a = window.web3.toWei(1000, 'ether');
+			console.log(a);
+			console.log(numberToHex(a));
+		}
+
+		 // TODO: update data with loop 
+		 var data = "0xa15f0c3d00000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000080";
+		 data+=Number(1).toString(16).padStart(64, '0'); // x len
+		 data+= Number(document.getElementById("x").value).toString(16).padStart(64, '0');
+		 data+=Number(1).toString(16).padStart(64, '0'); // y len
+		 data+= Number(document.getElementById("y").value).toString(16).padStart(64, '0');
+		 console.log(data);
+
+
+			var params = [
+			  {
+			    from: accounts[0],
+			    to: '0x509aaF71f59b61F6e2184F8c2dB7dA0BaCF6d53a', // TODO: update this
+			    data: data,	// createLand()
+			  },
+			];
+
+			await ethereum
+			  .request({
+			    method: 'eth_sendTransaction',
+			    params,
+			  })
+			  .then((result) => {
+			    // The result varies by RPC method.
+			    // For example, this method will return a transaction hash hexadecimal string on success.
+				 console.log(result);
+			  })
+			  .catch((error) => {
+			    // If the request fails, the Promise will reject with an error.
+			  });
+		};
+	
+	</script>
+	</head>
+	
+<body class="is-preload">
+
+  <label for="x">X:</label>
+  <input type="number" id="x" name="x"><br><br>
+  <label for="y">Y:</label>
+  <input type="number" id="y" name="y"><br><br>
+<button type="button" onclick="return mint();">MINT!</button>
+
+</body>
+</html>
